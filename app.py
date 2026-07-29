@@ -1,18 +1,22 @@
-from flask import Flask
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
-    return "Calculator App is Running!"
+    result = None
 
-@app.route("/add/<int:a>/<int:b>")
-def add(a, b):
-    return str(a + b)
+    if request.method == "POST":
+        num1 = int(request.form["num1"])
+        num2 = int(request.form["num2"])
+        operation = request.form["operation"]
 
-@app.route("/subtract/<int:a>/<int:b>")
-def subtract(a, b):
-    return str(a - b)
+        if operation == "add":
+            result = num1 + num2
+        else:
+            result = num1 - num2
+
+    return render_template("index.html", result=result)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
